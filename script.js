@@ -3,8 +3,8 @@ const gameData = {
         squarePerLine: 3,
         desktopContainerWidth: '50vh',
         desktopContainerHeight: '50vh',
-        mobileContainerWidth: '41vh',
-        mobileContainerHeight: '41vh',
+        mobileContainerWidth: '45vh',
+        mobileContainerHeight: '45vh',
 
         winConditions: {
 
@@ -15,8 +15,8 @@ const gameData = {
         squarePerLine: 4,
         desktopContainerWidth: '60vh',
         desktopContainerHeight: '60vh',
-        mobileContainerWidth: '41vh',
-        mobileContainerHeight: '41vh',
+        mobileContainerWidth: '45vh',
+        mobileContainerHeight: '45vh',
 
         winConditions: {
 
@@ -27,8 +27,8 @@ const gameData = {
         squarePerLine: 5,
         desktopContainerWidth: '70vh',
         desktopContainerHeight: '70vh',
-        mobileContainerWidth: '41vh',
-        mobileContainerHeight: '41vh',
+        mobileContainerWidth: '45vh',
+        mobileContainerHeight: '45vh',
 
         winConditions: {
 
@@ -36,23 +36,25 @@ const gameData = {
     }
 }
 
+const header = document.querySelector('header')
 const gameContainer = document.querySelector('.game-container')
 const outerContainer = document.querySelector('.outer-container')
 const gridSizeSelectors = document.querySelectorAll('.grid-size-selector')
-let isMobileSize = window.matchMedia("(max-width: 640px)")
+const gridSizeDiv = document.querySelector('#grid-size')
+const dropDown = document.querySelector('#dropdown')
 let lineSize = 3
 
 
 const setLineSize = (value) => {
     if (window.matchMedia("(max-width: 640px)").matches) {
-        outerContainer.style.width = gameData[`${value.target.innerHTML}`].mobileContainerWidth
-        outerContainer.style.height = gameData[`${value.target.innerHTML}`].mobileContainerHeight
+        outerContainer.style.width = gameData[`${value.target.dataset.label}`].mobileContainerWidth
+        outerContainer.style.height = gameData[`${value.target.dataset.label}`].mobileContainerHeight
     } else {
-        outerContainer.style.width = gameData[`${value.target.innerHTML}`].desktopContainerWidth
-        outerContainer.style.height = gameData[`${value.target.innerHTML}`].desktopContainerHeight
+        outerContainer.style.width = gameData[`${value.target.dataset.label}`].desktopContainerWidth
+        outerContainer.style.height = gameData[`${value.target.dataset.label}`].desktopContainerHeight
     }
 
-    lineSize = gameData[`${value.target.innerHTML}`].squarePerLine
+    lineSize = gameData[`${value.target.dataset.label}`].squarePerLine
     gameContainer
     initBoard()
 }
@@ -81,3 +83,16 @@ initBoard()
 for (let selector of gridSizeSelectors) {
     selector.addEventListener('click', setLineSize)
 }
+
+const showHead = () => {
+    if (header.classList.contains('down')) {
+        gridSizeDiv.classList.toggle('down')
+        setTimeout(() => header.classList.toggle('down'), 250)
+    } else {
+        header.classList.toggle('down')
+        setTimeout(() => gridSizeDiv.classList.toggle('down'), 250)
+    }
+    
+}
+
+dropDown.addEventListener('click', showHead)

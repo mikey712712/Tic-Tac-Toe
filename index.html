@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,28 +8,47 @@
     <link rel="stylesheet" href="./style.css">
     <title>Document</title>
 </head>
+
 <body>
     <header>
         <div id="dropdown">
             <img src="./images/dropdown.png">
         </div>
-        <button class="grid-size-selector" data-line-size="3">3 x 3</button>
-        <button class="grid-size-selector" data-line-size="4">4 x 4</button>
-        <button class="grid-size-selector" data-line-size="5">5 x 5</button>
-        
-        <div id="player-1-score" class="score">
+        <div id="grid-size">
+            <h3>
+                Grid Size
+            </h3>
+            <div class="grid-option">
+                <input id="3-by-3" type="radio" class="grid-size-selector" data-label="3 x 3" data-line-size="3"
+                    name="select" checked="true">
+                <label for="3-by-3">3 x 3</label>
+            </div>
+            <div class="grid-option">
+                <input id="4-by-4" type="radio" class="grid-size-selector" data-label="4 x 4" data-line-size="4"
+                    name="select">
+                <label for="4-by-4">4 x 4</label>
+            </div>
+            <div class="grid-option">
+                <input id="4-by-4" type="radio" class="grid-size-selector" data-label="5 x 5" data-line-size="5"
+                    name="select">
+                <label for="5-by-5">5 x 5</label>
+            </div>
+        </div>
 
+        <div id="player-1-score" class="score">
+            PLAYER 1
         </div>
         <div id="player-2-score" class="score">
-            
+            PLAYER 2
         </div>
     </header>
     <div class="outer-container">
         <div class="game-container">
-         
+
         </div>
     </div>
-    
+
     <script src="script.js"></script>
 </body>
+
 </html>

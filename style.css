@@ -3,14 +3,73 @@ body {
     width: 100%;
     min-height: 100vh;
     margin: 0 auto;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.5vh;
+}
+
+#grid-size {
+    opacity: 0;
+    transition: 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 100%;
+}
+
+#grid-size.down {
+    opacity: 1;
+}
+
+.grid-option {
+    height: 15%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+input {
+    background-color: white;
+    color: white;
+    border-radius: 0.8vh;
+    width: 13px;
+    height: 13px;
+    margin: auto 0;
+    appearance: none;
+    border: 2px solid black;
+    transition: 0.4s;
+}
+
+input:checked {
+    background-color: black;
+}
+
+label {
+    vertical-align: middle;
+    margin: auto 0;
+
+}
+
+input:hover{
+    box-shadow: 0 0 2em #1db95463, inset 0 0 1em #1db95463;
 }
 
 header {
     height: 6vh;
     width: 100%;
     display: flex;
-    justify-content: space-between ;
+    justify-content: space-between;
     background-color: rgb(255, 255, 255);
+    transition: 0.4s;
+    max-height: 160px;
+}
+
+h3 {
+    margin: 0 auto;
+}
+
+header.down {
+    height: 24vh;
+    max-height: 160px;
 }
 
 #dropdown {
@@ -23,6 +82,12 @@ header {
 img {
     max-height: 80%;
     margin: auto;
+}
+
+.score {
+    max-height: 80%;
+    margin: auto 0;
+    padding: 0 5%;
 }
 
 .outer-container {
@@ -59,7 +124,7 @@ img {
 
 @media (max-width: 640px) {
     .outer-container {
-        width: 41vh;
-        height: 41vh;
+        width: 45vh;
+        height: 45vh;
     }
 }
