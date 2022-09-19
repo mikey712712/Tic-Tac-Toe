@@ -100,6 +100,8 @@ img {
     opacity: 1;
     width: 50vh;
     height: 50vh;
+    max-width: 95vw;
+    max-height: 95vw;
 }
 
 .game-container {

@@ -25,8 +25,8 @@ const gameData = {
 
     '5 x 5': {
         squarePerLine: 5,
-        desktopContainerWidth: '70vh',
-        desktopContainerHeight: '70vh',
+        desktopContainerWidth: '65vh',
+        desktopContainerHeight: '65vh',
         mobileContainerWidth: '45vh',
         mobileContainerHeight: '45vh',
 
@@ -46,6 +46,7 @@ let lineSize = 3
 
 
 const setLineSize = (value) => {
+    value.stopPropagation()
     if (window.matchMedia("(max-width: 640px)").matches) {
         outerContainer.style.width = gameData[`${value.target.dataset.label}`].mobileContainerWidth
         outerContainer.style.height = gameData[`${value.target.dataset.label}`].mobileContainerHeight
@@ -60,7 +61,7 @@ const setLineSize = (value) => {
 }
 
 const createBoard = () => {
-    for (let i = 0; i < Math.pow(lineSize, 2); i++) {
+    for (let i = 0; i < lineSize ** 2; i++) {
         const newSquare = document.createElement('div')
         newSquare.classList.add('game-slot')
         newSquare.dataset.squareNum = i + 1
@@ -84,11 +85,21 @@ for (let selector of gridSizeSelectors) {
     selector.addEventListener('click', setLineSize)
 }
 
+for (let selector of gridSizeSelectors) {
+    selector.disabled = true
+}
+
 const showHead = () => {
     if (header.classList.contains('down')) {
+        for (let selector of gridSizeSelectors) {
+            selector.disabled = true
+        }
         gridSizeDiv.classList.toggle('down')
         setTimeout(() => header.classList.toggle('down'), 250)
     } else {
+        for (let selector of gridSizeSelectors) {
+            selector.disabled = false
+        }
         header.classList.toggle('down')
         setTimeout(() => gridSizeDiv.classList.toggle('down'), 250)
     }
