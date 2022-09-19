@@ -1,10 +1,11 @@
 body {
     background-color: #1DB954;
-    max-width: 100vw;
+    width: 100%;
+    min-height: 100vh;
     margin: 0 auto;
 }
 
-nav {
+header {
     height: 6vh;
     width: 100%;
     display: flex;
@@ -29,11 +30,11 @@ img {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 60px auto;
+    margin: 10vh auto;
     background-color: black;
     opacity: 1;
-    width: 45vh;
-    height: 45vh;
+    width: 50vh;
+    height: 50vh;
 }
 
 .game-container {
@@ -50,8 +51,15 @@ img {
 
 .game-slot {
     border-radius: 0.7vh;
-    background-color: white;
+    background-color: rgb(255, 255, 255);
     opacity: 0.85;
     height: 100%;
     width: 100%;
+}
+
+@media (max-width: 640px) {
+    .outer-container {
+        width: 41vh;
+        height: 41vh;
+    }
 }
