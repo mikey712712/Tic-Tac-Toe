@@ -236,12 +236,14 @@ const initBoard = () => {
     circleSlots = []
     const slots = document.querySelectorAll('.game-slot')
     const winStuff = document.querySelectorAll('.win')
+    
     for (let stuff of winStuff) {
         stuff.remove()
     }
     for (let slot of slots) {
         slot.remove()
     }
+
     gameContainer.style.gridTemplateRows = `repeat(${lineSize}, 1fr)`
     gameContainer.style.gridTemplateColumns = `repeat(${lineSize}, 1fr)`
     createBoard()
@@ -263,23 +265,26 @@ const showHead = () => {
         for (let selector of gridSizeSelectors) {
             selector.disabled = true
         }
+
         plug.style.transition = '0.5s'
         plug.classList.toggle('down')
         scoreDiv.classList.toggle('down')
         gridSizeDiv.classList.toggle('down')
         setTimeout(() => header.classList.toggle('down'), 250)
-    } else {
+    } 
+    else {
         for (let selector of gridSizeSelectors) {
             selector.disabled = false
         }
+
         header.classList.toggle('down')
         plug.style.transition = '2s'
+
         setTimeout(() => {
             gridSizeDiv.classList.toggle('down')
             scoreDiv.classList.toggle('down')
             setTimeout(() => plug.classList.toggle('down'), 300)
         }, 250)
-
     }
 
 }
