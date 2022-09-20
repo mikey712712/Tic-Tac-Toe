@@ -207,6 +207,15 @@ const setLineSize = (value) => {
     lineSize = gameData[`${value.target.dataset.label}`].squarePerLine
     gameContainer
     initBoard()
+    whitenSquares()
+}
+
+const whitenSquares = () => {
+    const slots = document.querySelectorAll('.game-slot')
+    for (let slot of slots) {
+        slot.style.backgroundColor = 'white'
+        slot.style.opacity = 0.85
+    }
 }
 
 const createBoard = () => {
@@ -239,6 +248,7 @@ const initBoard = () => {
 }
 
 initBoard()
+whitenSquares()
 
 for (let selector of gridSizeSelectors) {
     selector.addEventListener('click', setLineSize)
@@ -282,7 +292,8 @@ const restartGame = () => {
     }
     gameContainer.style.zIndex = 1;
     winTextDiv.style.opacity = 0;
-    setTimeout(() => initBoard(), 800)
+    setTimeout(() => initBoard(), 400)
+    setTimeout(() => whitenSquares(), 800)
 }
 
 dropDown.addEventListener('click', showHead)
