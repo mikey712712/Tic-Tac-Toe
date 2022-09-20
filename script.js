@@ -47,7 +47,18 @@ const gameData = {
         mobileContainerHeight: '45vh',
 
         winConditions: {
-
+            row1: [1, 2, 3, 4, 5],
+            row2: [6, 7, 8, 9, 10],
+            row3: [11, 12, 13, 14, 15],
+            row4: [16, 17, 18, 19, 20],
+            row5: [21, 22, 23, 24, 25],
+            col1: [1, 6, 11, 16, 21],
+            col2: [2, 7, 12, 17, 22],
+            col3: [3, 8, 13, 18, 23],
+            col4: [4, 9, 14, 19, 24],
+            col5: [5, 10, 15, 20, 25],
+            diag1: [1, 7, 13, 19, 25],
+            diag2: [5, 9, 13, 17, 21],
         }
     }
 }
@@ -59,17 +70,57 @@ const gridSizeSelectors = document.querySelectorAll('.grid-size-selector')
 const gridSizeDiv = document.querySelector('#grid-size')
 const dropDown = document.querySelector('#dropdown')
 const plug = document.querySelector('#plug')
-const cross = `<img src="./images/cross.png">`
-const circle = `<img src="./images/circle.png">`
+const winTextDiv = document.querySelector('.win-text')
+
+const restartButton = document.createElement('button')
+restartButton.type = 'button'
+restartButton.classList.add('restart')
+restartButton.classList.add('win')
+restartButton.innerHTML = '<img id="reset" src="./images/reset.png">Restart'
+
+const cross = `<img id="cross" src="./images/cross.png">`
+const circle = `<img id="circle" src="./images/circle.png">`
 const crossPreview = `<img src="./images/cross.png" class="preview">`
 const circlePreview = `<img src="./images/circle.png" class="preview">`
 let crossSlots = []
 let circleSlots = []
+
 let currentGridSize = '3 x 3'
 let lineSize = 3
 let turn = 0
+let crossPoints = 0
+let circlePoints = 0
+
+const winAnimation1 = (target) => {
+    target.style.width = '100%'
+    target.style.height = '100%'
+    target.style.filter = 'blur(2px)'
+    // target.style.filter = 'opacity(50%)'
+}
+const winAnimation2 = (target) => {
+    target.style.width = '84%'
+    target.style.height = '84%'
+    target.style.filter = ''
+}
+
+const winScreen = (winner) => {
+    const winnerText = document.createElement('p')
+    winnerText.classList.add('win')
+    if (winner === 'draw') {
+        winnerText.textContent = `It's a draw.`
+    } else {
+        winnerText.textContent = `${winner} wins!`
+    }
+    winTextDiv.appendChild(winnerText)
+    winTextDiv.appendChild(restartButton)
+    winTextDiv.style.opacity = 1;
+}
 
 const checkForWin = () => {
+    if (turn === lineSize ** 2) {
+        winScreen('draw')
+        return
+    }
     const winConditionsObject = gameData[currentGridSize].winConditions
     for (let condition in winConditionsObject) {
         const requiredSlots = winConditionsObject[condition].length
@@ -82,10 +133,30 @@ const checkForWin = () => {
                 crossCount++
             }
         }
-        if (crossCount === requiredSlots) {
-            console.log('Cross wins')
-        } else if (circleCount === requiredSlots) {
-            console.log('Circle wins')
+        if (crossCount === requiredSlots || circleCount === requiredSlots) {
+            for (let i = 1; i <= lineSize ** 2; i++) {
+                const currSlot = document.querySelector(`[data-square-num = "${i}"]`)
+                currSlot.removeEventListener('click', insertSymbol)
+                currSlot.removeEventListener('mouseover', previewSymbol)
+                currSlot.removeEventListener('mouseleave', unPreviewSymbol)
+            }
+            if (crossCount === requiredSlots) {
+                crossPoints += 1
+                for (let slot of winConditionsObject[condition]) {
+                    const currSlot = document.querySelector(`[data-square-num = "${slot}"]`).firstChild
+                    setTimeout(() => winAnimation1(currSlot), 400)
+                    setTimeout(() => winAnimation2(currSlot), 800)
+                }
+                setTimeout(() => winScreen('Cross'), 1400)
+            } else if (circleCount === requiredSlots) {
+                circlePoints += 1
+                for (let slot of winConditionsObject[condition]) {
+                    const currSlot = document.querySelector(`[data-square-num = "${slot}"]`).firstChild
+                    setTimeout(() => winAnimation1(currSlot), 400)
+                    setTimeout(() => winAnimation2(currSlot), 800)
+                }
+                setTimeout(() => winScreen('Circle'), 1400)
+            }
         }
     }
 }
@@ -98,6 +169,7 @@ const insertSymbol = (event) => {
         event.target.innerHTML = circle
         circleSlots.push(event.target.dataset.squareNum)
     }
+    event.target.removeEventListener('click', insertSymbol)
     turn++
     checkForWin()
 }
@@ -145,7 +217,14 @@ const createBoard = () => {
 }
 
 const initBoard = () => {
+    turn = 0
+    crossSlots = []
+    circleSlots = []
     const slots = document.querySelectorAll('.game-slot')
+    const winStuff = document.querySelectorAll('.win')
+    for (let stuff of winStuff) {
+        stuff.remove()
+    }
     for (let slot of slots) {
         slot.remove()
     }
@@ -183,9 +262,21 @@ const showHead = () => {
             gridSizeDiv.classList.toggle('down')
             setTimeout(() => plug.classList.toggle('down'), 300)
         }, 250)
-        
+
     }
-    
+
+}
+
+const restartGame = () => {
+    const slots = document.querySelectorAll('.game-slot')
+    for (let slot of slots) {
+        slot.style.backgroundColor = 'black'
+        slot.style.opacity = 0
+    }
+    gameContainer.style.zIndex = 1;
+    winTextDiv.style.opacity = 0;
+    setTimeout(() => initBoard(), 800)
 }
 
 dropDown.addEventListener('click', showHead)
+restartButton.addEventListener('click', restartGame)
