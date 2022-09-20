@@ -71,6 +71,9 @@ const gridSizeDiv = document.querySelector('#grid-size')
 const dropDown = document.querySelector('#dropdown')
 const plug = document.querySelector('#plug')
 const winTextDiv = document.querySelector('.win-text')
+const scoreDiv = document.querySelector('.win-container')
+const xScore = document.querySelector('#p1score')
+const oScore = document.querySelector('#p2score')
 
 const restartButton = document.createElement('button')
 restartButton.type = 'button'
@@ -111,6 +114,8 @@ const winScreen = (winner) => {
     } else {
         winnerText.textContent = `${winner} wins!`
     }
+    xScore.textContent = crossPoints
+    oScore.textContent = circlePoints
     winTextDiv.appendChild(winnerText)
     winTextDiv.appendChild(restartButton)
     winTextDiv.style.opacity = 1;
@@ -248,8 +253,9 @@ const showHead = () => {
         for (let selector of gridSizeSelectors) {
             selector.disabled = true
         }
-        plug.style.transition = '0.7s'
+        plug.style.transition = '0.5s'
         plug.classList.toggle('down')
+        scoreDiv.classList.toggle('down')
         gridSizeDiv.classList.toggle('down')
         setTimeout(() => header.classList.toggle('down'), 250)
     } else {
@@ -260,6 +266,7 @@ const showHead = () => {
         plug.style.transition = '2s'
         setTimeout(() => {
             gridSizeDiv.classList.toggle('down')
+            scoreDiv.classList.toggle('down')
             setTimeout(() => plug.classList.toggle('down'), 300)
         }, 250)
 

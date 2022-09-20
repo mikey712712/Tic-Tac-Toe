@@ -17,10 +17,11 @@
     <header>
         <div id="dropdown">
             <img src="./images/dropdown.png">
-            <p style="font-weight: bolder">Tic-Tac-Toe</p>
+            <p style="font-weight: bolder; padding-left: 0.3em;">Tic-Tac-Toe</p>
             </br>
             <p id="plug">By Michael Holton</p>
         </div>
+        
         <div id="grid-size">
             <h3>
                 Grid Size
@@ -41,12 +42,21 @@
                 <label for="5-by-5">5 x 5</label>
             </div>
         </div>
-
-        <div id="player-1-score" class="score">
-            P1
-        </div>
-        <div id="player-2-score" class="score">
-            P2
+        <div class="win-container">
+            <h3>Wins</h3>
+            <div class="score">
+                <span class="player-scores">
+                    <h4>X</h4>
+                    <p id="p1score">0</p>
+                </span>
+                <span>
+                    <h4>-</h4>
+                </span>
+                <span class="player-scores">
+                    <h4>O</h4>
+                    <p id="p2score">0</p>
+                </span>
+            </div>
         </div>
     </header>
     <div class="outer-container">

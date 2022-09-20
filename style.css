@@ -20,11 +20,13 @@ body {
 
 #grid-size {
     opacity: 0;
-    transition: 0.7s;
+    transition: 0.5s;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
     height: 100%;
+    margin-right: auto;
+    margin-left: 10vw;
 }
 
 #grid-size.down {
@@ -117,13 +119,13 @@ h3 {
 
 header.down {
     height: 24vh;
-    max-height: 160px;
+    max-height: 220px;
 }
 
 #dropdown {
     height: 6vh;
     width: fit-content;
-    font-size: 1.2em;
+    font-size: 1.3em;
     display: flex;
     align-items: center;
 }
@@ -153,10 +155,40 @@ button.win {
     align-items: center;
 }
 
+.player-scores {
+    max-height: 100%;
+}
+
+.win-container p {
+    text-align: center;
+}
+
+.win-container {
+    padding-right: 1.8vh;
+    padding-top: 2.4vh;
+    width: 15vw;
+    height: 300%;
+    max-height: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    opacity: 0;
+    transition: 0.5s;
+}
+
 .score {
     max-height: 80%;
+    width: 100%;
+    max-width: 120px;
     margin: auto 0;
-    padding: 0 5%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+.win-container.down {
+    opacity: 1;
 }
 
 .outer-container {
