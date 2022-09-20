@@ -1,3 +1,18 @@
+.material-symbols-outlined {
+    font-variation-settings:
+        'FILL' 0,
+        'wght' 500,
+        'GRAD' 0,
+        'opsz' 68;
+    font-size: 15vh;
+}
+
+.preview {
+    opacity: 0.4;
+    transition: 0.5s;
+    pointer-events: none;
+}
+
 body {
     background-color: #1DB954;
     width: 100%;
@@ -9,7 +24,7 @@ body {
 
 #grid-size {
     opacity: 0;
-    transition: 0.2s;
+    transition: 0.7s;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -49,7 +64,21 @@ label {
 
 }
 
-input:hover{
+#plug {
+    font-size: medium;
+    font-weight: bold;
+    position: absolute;
+    top: 5vh;
+    left: 1vh;
+    opacity: 0;
+    transition: 0.7s;
+}
+
+#plug.down {
+    opacity: 1;
+}
+
+input:hover {
     box-shadow: 0 0 2em #1db95463, inset 0 0 1em #1db95463;
 }
 
@@ -73,8 +102,9 @@ header.down {
 }
 
 #dropdown {
-    height: 6vh;  
-    width: 6vh;  
+    height: 6vh;
+    width: fit-content;
+    font-size: 1.2em;
     display: flex;
     align-items: center;
 }
@@ -122,11 +152,29 @@ img {
     opacity: 0.85;
     height: 100%;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-slot img {
+    width: 81%;
+    height: 84%;
+    transition: 0.5s;
 }
 
 @media (max-width: 640px) {
     .outer-container {
         width: 45vh;
         height: 45vh;
+    }
+
+    .material-symbols-outlined.md-48 {
+        font-size: 13vh;
+    
+    }
+
+    #plug {
+        font-size: 0.75em;
     }
 }
