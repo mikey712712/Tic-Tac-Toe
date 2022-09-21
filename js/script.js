@@ -129,8 +129,8 @@ restartButton.classList.add("restart")
 restartButton.classList.add("win")
 restartButton.innerHTML = '<img id="reset" src="./images/reset.png">Restart'
 
-const cross = `<img id="cross" src="./images/cross.png">`
-const circle = `<img id="circle" src="./images/circle.png">`
+const cross = `<img id="cross" class="shape" src="./images/cross.png">`
+const circle = `<img id="circle" class="shape" src="./images/circle.png">`
 const crossPreview = `<img src="./images/cross.png" class="preview">`
 const circlePreview = `<img src="./images/circle.png" class="preview">`
 let crossSlots = []
@@ -143,14 +143,10 @@ let crossPoints = 0
 let circlePoints = 0
 
 const winAnimation1 = (target) => {
-    target.style.width = "100%"
-    target.style.height = "100%"
-    target.style.filter = "blur(2px)"
+    target.classList.toggle("animation")
 }
 const winAnimation2 = (target) => {
-    target.style.width = "84%"
-    target.style.height = "84%"
-    target.style.filter = ""
+    target.classList.toggle("animation")
 }
 
 const winScreen = (winner) => {
@@ -230,8 +226,23 @@ const insertSymbol = (event) => {
         circleSlots.push(event.target.dataset.squareNum)
     }
     event.target.removeEventListener("click", insertSymbol)
+    ticTacToeAnimation(event.target)
     turn++
     checkForWin()
+}
+
+const connect4Animation = (target) => {
+    target.firstChild.classList.toggle("connect-4")
+    setTimeout(() => {
+        target.firstChild.classList.toggle("connect-4")
+    }, 0)
+}
+
+const ticTacToeAnimation = (target) => {
+    target.firstChild.classList.toggle("tic-tac")
+    setTimeout(() => {
+        target.firstChild.classList.toggle("tic-tac")
+    }, 0)
 }
 
 const insertSymbolConnect4 = (event) => {
@@ -253,16 +264,13 @@ const insertSymbolConnect4 = (event) => {
     } else {
         for (let num of currLine) {
             const selectedSlot = document.querySelector(`[data-square-num = "${num}"]`)
-            if (selectedSlot.innerHTML === cross || selectedSlot.innerHTML === circle) {
+            const slotContents = selectedSlot.firstChild
+            if (slotContents !== null && slotContents.classList.contains("shape")) {
                 addShapeSlot = document.querySelector(`[data-square-num = "${num - 5}"]`)
                 break
             }
         }
     }
-
-    addShapeSlot.removeEventListener("click", insertSymbolConnect4)
-    addShapeSlot.removeEventListener("mouseover", previewSymbolC4)
-    addShapeSlot.removeEventListener("mouseleave", unPreviewSymbolC4)
 
     if (turn % 2 === 0) {
         addShapeSlot.innerHTML = cross
@@ -272,6 +280,11 @@ const insertSymbolConnect4 = (event) => {
         circleSlots.push(addShapeSlot.dataset.squareNum)
     }
 
+    addShapeSlot.removeEventListener("click", insertSymbolConnect4)
+    addShapeSlot.removeEventListener("mouseover", previewSymbolC4)
+    addShapeSlot.removeEventListener("mouseleave", unPreviewSymbolC4)
+
+    connect4Animation(addShapeSlot)
     turn++
     checkForWin()
 }
