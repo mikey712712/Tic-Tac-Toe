@@ -22,11 +22,18 @@ body {
     opacity: 0;
     transition: 0.5s;
     display: flex;
+    min-width: 10vw;
     flex-direction: column;
     justify-content: space-evenly;
+    align-items: flex-start;
     height: 100%;
     margin-right: auto;
-    margin-left: 10vw;
+    margin-top: 0.86vh;
+    margin-left: 8vw;
+}
+
+.grid-option label {
+    padding-left: 0.5vw;
 }
 
 #grid-size.down {
@@ -35,9 +42,9 @@ body {
 
 .grid-option {
     height: 15%;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
+    display: grid;
+    grid-template-columns: 13px 13px auto;
+    grid-template-rows: auto 13px auto;
 }
 
 p.win {
@@ -61,10 +68,12 @@ div.win-text {
 
 input {
     background-color: white;
+    grid-column: 1 / span 1;
+    grid-row: 2 / span 1;
     color: white;
     border-radius: 0.8vh;
-    width: 13px;
-    height: 13px;
+    width: 100%;
+    height: 100%;
     margin: auto 0;
     appearance: none;
     border: 2px solid black;
@@ -78,7 +87,8 @@ input:checked {
 label {
     vertical-align: middle;
     margin: auto 0;
-
+    grid-column: 3 / span 1;
+    grid-row: 2 / span 1;
 }
 
 #plug {
@@ -117,9 +127,14 @@ h3 {
     margin: 0 auto;
 }
 
+#grid-heading {
+    margin: 0;
+    text-align: left;
+}
+
 header.down {
     height: 24vh;
-    max-height: 220px;
+    max-height: 240px;
 }
 
 #dropdown {
