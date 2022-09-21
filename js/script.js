@@ -116,8 +116,10 @@ const gameContainer = document.querySelector(".game-container")
 const outerContainer = document.querySelector(".outer-container")
 const gridSizeSelectors = document.querySelectorAll(".grid-size-selector")
 const gridSizeDiv = document.querySelector("#grid-size")
-const dropDown = document.querySelector("#dropdown")
+const dropDown = document.querySelector("#dropdown-icon")
 const plug = document.querySelector("#plug")
+const botSwitchDiv = document.querySelector(".bot-option")
+const botSwitch = document.querySelector("#bot-mode")
 const winTextDiv = document.querySelector(".win-text")
 const scoreDiv = document.querySelector(".win-container")
 const xScore = document.querySelector("#p1score")
@@ -135,6 +137,7 @@ const crossPreview = `<img src="./images/cross.png" class="preview">`
 const circlePreview = `<img src="./images/circle.png" class="preview">`
 let crossSlots = []
 let circleSlots = []
+let botMode = false
 
 let currentGridSize = "3 x 3"
 let lineSize = 3
@@ -166,7 +169,7 @@ const winScreen = (winner) => {
 
 const checkForWin = () => {
     const winConditionsObject = gameData[currentGridSize].winConditions
-
+    let choice = null
     for (let condition in winConditionsObject) {
         const requiredSlots = winConditionsObject[condition].length
         let circleCount = 0
@@ -210,10 +213,32 @@ const checkForWin = () => {
                 setTimeout(() => winScreen("Circle"), 1400)
                 return
             }
+        } else if (circleCount === requiredSlots - 1 && botMode && turn % 2 !== 0 && turn < lineSize ** 2) {
+            for (let slot of winConditionsObject[condition]) {
+                const slotContent = document.querySelector(`[data-square-num = "${slot}"]`).innerHTML
+                if (!circleSlots.includes(String(slot)) && (slotContent === "" || slotContent === circlePreview || slotContent === crossPreview)) {
+                    console.log("bot too smart")
+                    document.querySelector(`[data-square-num = "${slot}"]`).click()
+                    return
+                }
+            }
+        } else if (crossCount === requiredSlots - 1 && botMode && turn % 2 !== 0 && turn < lineSize ** 2) {
+            for (let slot of winConditionsObject[condition]) {
+                const slotContent = document.querySelector(`[data-square-num = "${slot}"]`).innerHTML
+                if (!crossSlots.includes(String(slot)) && (slotContent === "" || slotContent === circlePreview || slotContent === crossPreview)) {
+                    console.log("BLOCKED LOL!")
+                    choice = document.querySelector(`[data-square-num = "${slot}"]`)
+                }
+            }
         }
     }
+    if (choice !== null) {
+        choice.click()
+    }
+
     if (turn === lineSize ** 2) {
         winScreen("draw")
+        return
     }
 }
 
@@ -229,20 +254,37 @@ const insertSymbol = (event) => {
     ticTacToeAnimation(event.target)
     turn++
     checkForWin()
+
+    if (turn % 2 !== 0 && turn < lineSize ** 2 && botMode) {
+        setTimeout(() => botChoice(), 10)
+    }
 }
 
 const connect4Animation = (target) => {
     target.firstChild.classList.toggle("connect-4")
     setTimeout(() => {
         target.firstChild.classList.toggle("connect-4")
-    }, 0)
+    }, 50)
+}
+
+const botChoice = () => {
+    const slots = document.querySelectorAll(".game-slot")
+    let availableSlots = []
+    for (let slot of slots) {
+        if (slot.innerHTML === "") {
+            availableSlots.push(slot.dataset.squareNum)
+        }
+    }
+    const botPick = availableSlots[Math.floor(Math.random() * availableSlots.length)]
+    const botSlotChoice = document.querySelector(`[data-square-num = "${botPick}"]`)
+    botSlotChoice.click()
 }
 
 const ticTacToeAnimation = (target) => {
     target.firstChild.classList.toggle("tic-tac")
     setTimeout(() => {
         target.firstChild.classList.toggle("tic-tac")
-    }, 0)
+    }, 100)
 }
 
 const insertSymbolConnect4 = (event) => {
@@ -283,10 +325,12 @@ const insertSymbolConnect4 = (event) => {
     addShapeSlot.removeEventListener("click", insertSymbolConnect4)
     addShapeSlot.removeEventListener("mouseover", previewSymbolC4)
     addShapeSlot.removeEventListener("mouseleave", unPreviewSymbolC4)
-
     connect4Animation(addShapeSlot)
     turn++
     checkForWin()
+    if (turn % 2 !== 0 && turn < lineSize ** 2 && botMode) {
+        setTimeout(() => botChoice(), 0)
+    }
 }
 
 const previewSymbol = (event) => {
@@ -450,6 +494,7 @@ const showHead = () => {
         plug.classList.toggle("down")
         scoreDiv.classList.toggle("down")
         gridSizeDiv.classList.toggle("down")
+        botSwitchDiv.classList.toggle("down")
         setTimeout(() => header.classList.toggle("down"), 250)
     } else {
         for (let selector of gridSizeSelectors) {
@@ -460,6 +505,7 @@ const showHead = () => {
         plug.style.transition = "2s"
 
         setTimeout(() => {
+            botSwitchDiv.classList.toggle("down")
             gridSizeDiv.classList.toggle("down")
             scoreDiv.classList.toggle("down")
             setTimeout(() => plug.classList.toggle("down"), 300)
@@ -478,5 +524,15 @@ const restartGame = () => {
     setTimeout(() => whitenSquares(), 800)
 }
 
+const toggleBotMode = () => {
+    if (botSwitch.checked) {
+        botMode = true
+    } else {
+        botMode = false
+    }
+    restartGame()
+}
+
 dropDown.addEventListener("click", showHead)
 restartButton.addEventListener("click", restartGame)
+botSwitch.addEventListener("click", toggleBotMode)

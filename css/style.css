@@ -227,6 +227,41 @@ button.win {
     height: 96%;
 }
 
+input#bot-mode {
+    display: flex;
+    justify-content: center;
+    height: 13px;
+    width: 13px;
+    
+}
+
+label#bot {
+    height: 13px;
+    margin: auto 0;
+    font-size: 0.8em;
+    height: 2vh;
+    width: fit-content;
+    padding-left: 0.5vw;
+    padding-top: 0.5vh;
+}
+
+.bot-option {
+    font-weight: bolder;
+    width: 15vw;
+    position: absolute;
+    top: 15vh;
+    left: 3vh;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    transition: 0.5s;
+    opacity: 0;
+}
+
+.bot-option.down {
+    opacity: 1;
+}
+
 .game-slot {
     transition: 0.6s;
     border-radius: 0.7vh;
@@ -288,10 +323,7 @@ img.tic-tac {
         top: -28vh;
     }
 
-    .material-symbols-outlined.md-48 {
-        font-size: 13vh;
-
-    }
+    
 
     #plug {
         font-size: 0.75em;
@@ -305,5 +337,14 @@ img.tic-tac {
         left: 0;
         height: 10vh;
         margin-bottom: 10vh;
+    }
+
+    .bot-option {
+        width: 35vw;
+    }
+    
+    label#bot {
+        padding-left: 1vw;
+        padding-top: 0.3vh;
     }
 }
