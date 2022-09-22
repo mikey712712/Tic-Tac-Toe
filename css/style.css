@@ -1,10 +1,22 @@
 body {
+    position: absolute;
+    top: 0;
+    left: 0;
     background-color: #1DB954;
     width: 100%;
+    max-height: 100vh;
     min-height: 100vh;
     margin: 0 auto;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Cairo', sans-serif;
     line-height: 1.5vh;
+}
+
+#blocker {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 .restart {
@@ -20,7 +32,7 @@ body {
     flex-direction: column;
     justify-content: space-evenly;
     align-items: flex-start;
-    height: 100%;
+    height: 90%;
     margin-right: auto;
     margin-top: 0.86vh;
     margin-left: 8vw;
@@ -87,7 +99,7 @@ label {
 
 #plug {
     font-size: medium;
-    font-weight: bold;
+    font-weight: 100;
     position: absolute;
     top: 5vh;
     left: 1vh;
@@ -108,6 +120,9 @@ button.win:hover {
 }
 
 header {
+    z-index: 1;
+    position: fixed;
+    top: 0;
     height: 6vh;
     width: 100%;
     display: flex;
@@ -127,14 +142,14 @@ h3 {
 }
 
 header.down {
-    height: 24vh;
-    max-height: 240px;
+    height: 28vh;
+    max-height: 260px;
 }
 
 #dropdown {
     height: 6vh;
     width: fit-content;
-    font-size: 1.3em;
+    font-size: 1.5em;
     display: flex;
     align-items: center;
 }
@@ -206,7 +221,7 @@ button.win {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 10vh auto;
+    margin: 16vh auto;
     background-color: black;
     opacity: 1;
     width: 50vh;
@@ -313,23 +328,6 @@ img.tic-tac {
     transition-timing-function: "ease-in";
 }
 
-@media (max-width: 640px) {
-    .outer-container {
-        width: 45vh;
-        height: 45vh;
-    }
-
-    img.connect-4 {
-        top: -28vh;
-    }
-
-    
-
-    #plug {
-        font-size: 0.75em;
-    }
-}
-
 @media (max-width: 1000px) {
     div.win-text {
         position: relative;
@@ -342,9 +340,44 @@ img.tic-tac {
     .bot-option {
         width: 35vw;
     }
-    
+
     label#bot {
         padding-left: 1vw;
         padding-top: 0.3vh;
     }
 }
+
+@media (max-width: 640px) {
+    .outer-container {
+        width: 45vh;
+        height: 45vh;
+    }
+
+    img.connect-4 {
+        top: -28vh;
+    }
+
+    .bot-option {
+        padding-top: 5vh;
+    }
+
+    label#bot {
+        padding-left: 2vw;
+        font-size: 0.6em;
+    }
+
+    #grid-size {
+        margin-top: 0.4vh;
+        height: 80%;
+    }
+
+    header.down {
+        height: 40vh;
+        max-height: 40vh;
+    }
+
+    #plug {
+        font-size: 0.75em;
+    }
+}
+

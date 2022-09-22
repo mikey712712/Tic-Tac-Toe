@@ -111,6 +111,7 @@ const gameData = {
     },
 }
 
+const body = document.querySelector("body")
 const header = document.querySelector("header")
 const gameContainer = document.querySelector(".game-container")
 const outerContainer = document.querySelector(".outer-container")
@@ -124,6 +125,8 @@ const winTextDiv = document.querySelector(".win-text")
 const scoreDiv = document.querySelector(".win-container")
 const xScore = document.querySelector("#p1score")
 const oScore = document.querySelector("#p2score")
+const blockScreenDiv = document.createElement("div")
+blockScreenDiv.setAttribute("id", "blocker")
 
 const restartButton = document.createElement("button")
 restartButton.type = "button"
@@ -152,6 +155,16 @@ const winAnimation2 = (target) => {
     target.classList.toggle("animation")
 }
 
+const blockScreen = () => {
+    console.log("h1")
+    body.appendChild(blockScreenDiv)
+}
+
+const unBlockScreen = () => {
+    const blockerDiv = document.querySelector("#blocker")
+    blockerDiv.remove()
+}
+
 const winScreen = (winner) => {
     const winnerText = document.createElement("p")
     winnerText.classList.add("win")
@@ -167,9 +180,77 @@ const winScreen = (winner) => {
     winTextDiv.style.opacity = 1
 }
 
-const checkForWin = () => {
+const botCheckBoard = () => {
     const winConditionsObject = gameData[currentGridSize].winConditions
     let choice = null
+    for (let condition in winConditionsObject) {
+        const requiredSlots = winConditionsObject[condition].length
+        let circleCount = 0
+        let crossCount = 0
+
+        for (let slot of winConditionsObject[condition]) {
+            if (circleSlots.includes(String(slot))) {
+                circleCount++
+            } else if (crossSlots.includes(String(slot))) {
+                crossCount++
+            }
+        }
+        if (circleCount === requiredSlots - 1 && botMode && turn % 2 !== 0 && turn < lineSize ** 2) {
+            for (let slot of winConditionsObject[condition]) {
+                const slotContent = document.querySelector(`[data-square-num = "${slot}"]`).innerHTML
+                let slotBelowContent = "no"
+                if (slot < lineSize ** 2 - lineSize) {
+                    slotBelowContent = document.querySelector(`[data-square-num = "${slot + lineSize}"]`).innerHTML
+                }
+                if (!circleSlots.includes(String(slot)) && (slotContent === "" || slotContent === circlePreview || slotContent === crossPreview)) {
+                    if (currentGridSize === "Connect 4" && (slotBelowContent !== "" || slotBelowContent === "no")) {
+                        console.log("bot too smart")
+                        document.querySelector(`[data-square-num = "${slot}"]`).click()
+                        return
+                    } else if (currentGridSize !== "Connect 4") {
+                        console.log("bot too smart")
+                        document.querySelector(`[data-square-num = "${slot}"]`).click()
+                        return
+                    }
+                }
+            }
+        } else if (crossCount === requiredSlots - 1 && botMode && turn % 2 !== 0 && turn < lineSize ** 2) {
+            for (let slot of winConditionsObject[condition]) {
+                const slotContent = document.querySelector(`[data-square-num = "${slot}"]`).innerHTML
+                let slotBelowContent = "no"
+                if (slot < lineSize ** 2 - lineSize) {
+                    slotBelowContent = document.querySelector(`[data-square-num = "${slot + lineSize}"]`).innerHTML
+                }
+                if (!crossSlots.includes(String(slot)) && (slotContent === "" || slotContent === circlePreview || slotContent === crossPreview)) {
+                    if (currentGridSize === "Connect 4" && (slotBelowContent !== "" || slotBelowContent === "no")) {
+                        choice = document.querySelector(`[data-square-num = "${slot}"]`)
+                        console.log("BLOCKED LOL!")
+                    } else if (currentGridSize !== "Connect 4") {
+                        console.log("BLOCKED LOL!")
+                        choice = document.querySelector(`[data-square-num = "${slot}"]`)
+                    }
+                }
+            }
+        }
+    }
+    if (choice !== null) {
+        choice.click()
+    } else {
+        const slots = document.querySelectorAll(".game-slot")
+        let availableSlots = []
+        for (let slot of slots) {
+            if (slot.innerHTML === "") {
+                availableSlots.push(slot.dataset.squareNum)
+            }
+        }
+        const botPick = availableSlots[Math.floor(Math.random() * availableSlots.length)]
+        const botSlotChoice = document.querySelector(`[data-square-num = "${botPick}"]`)
+        botSlotChoice.click()
+    }
+}
+
+const checkForWin = () => {
+    const winConditionsObject = gameData[currentGridSize].winConditions
     for (let condition in winConditionsObject) {
         const requiredSlots = winConditionsObject[condition].length
         let circleCount = 0
@@ -213,27 +294,7 @@ const checkForWin = () => {
                 setTimeout(() => winScreen("Circle"), 1400)
                 return
             }
-        } else if (circleCount === requiredSlots - 1 && botMode && turn % 2 !== 0 && turn < lineSize ** 2) {
-            for (let slot of winConditionsObject[condition]) {
-                const slotContent = document.querySelector(`[data-square-num = "${slot}"]`).innerHTML
-                if (!circleSlots.includes(String(slot)) && (slotContent === "" || slotContent === circlePreview || slotContent === crossPreview)) {
-                    console.log("bot too smart")
-                    document.querySelector(`[data-square-num = "${slot}"]`).click()
-                    return
-                }
-            }
-        } else if (crossCount === requiredSlots - 1 && botMode && turn % 2 !== 0 && turn < lineSize ** 2) {
-            for (let slot of winConditionsObject[condition]) {
-                const slotContent = document.querySelector(`[data-square-num = "${slot}"]`).innerHTML
-                if (!crossSlots.includes(String(slot)) && (slotContent === "" || slotContent === circlePreview || slotContent === crossPreview)) {
-                    console.log("BLOCKED LOL!")
-                    choice = document.querySelector(`[data-square-num = "${slot}"]`)
-                }
-            }
         }
-    }
-    if (choice !== null) {
-        choice.click()
     }
 
     if (turn === lineSize ** 2) {
@@ -256,7 +317,9 @@ const insertSymbol = (event) => {
     checkForWin()
 
     if (turn % 2 !== 0 && turn < lineSize ** 2 && botMode) {
-        setTimeout(() => botChoice(), 10)
+        blockScreen()
+        setTimeout(() => botCheckBoard(), 400)
+        setTimeout(() => unBlockScreen(), 400)
     }
 }
 
@@ -267,18 +330,19 @@ const connect4Animation = (target) => {
     }, 50)
 }
 
-const botChoice = () => {
-    const slots = document.querySelectorAll(".game-slot")
-    let availableSlots = []
-    for (let slot of slots) {
-        if (slot.innerHTML === "") {
-            availableSlots.push(slot.dataset.squareNum)
-        }
-    }
-    const botPick = availableSlots[Math.floor(Math.random() * availableSlots.length)]
-    const botSlotChoice = document.querySelector(`[data-square-num = "${botPick}"]`)
-    botSlotChoice.click()
-}
+// // BOT V1 LOGIC (WEAK AF)
+// const botChoice = () => {
+//     const slots = document.querySelectorAll(".game-slot")
+//     let availableSlots = []
+//     for (let slot of slots) {
+//         if (slot.innerHTML === "") {
+//             availableSlots.push(slot.dataset.squareNum)
+//         }
+//     }
+//     const botPick = availableSlots[Math.floor(Math.random() * availableSlots.length)]
+//     const botSlotChoice = document.querySelector(`[data-square-num = "${botPick}"]`)
+//     botSlotChoice.click()
+// }
 
 const ticTacToeAnimation = (target) => {
     target.firstChild.classList.toggle("tic-tac")
@@ -328,8 +392,11 @@ const insertSymbolConnect4 = (event) => {
     connect4Animation(addShapeSlot)
     turn++
     checkForWin()
+
     if (turn % 2 !== 0 && turn < lineSize ** 2 && botMode) {
-        setTimeout(() => botChoice(), 0)
+        blockScreen()
+        setTimeout(() => botCheckBoard(), 600)
+        setTimeout(() => unBlockScreen(), 600)
     }
 }
 
