@@ -181,6 +181,10 @@ const winScreen = (winner) => {
 }
 
 const botCheckBoard = () => {
+    if (currentGridSize !== "Connect 4" && document.querySelector(`[data-square-num = "${(lineSize ** 2 + 1) / 2}"]`).innerHTML === "") {
+        document.querySelector(`[data-square-num = "${(lineSize ** 2 + 1) / 2}"]`).click()
+        return
+    }
     const winConditionsObject = gameData[currentGridSize].winConditions
     let choice = null
     for (let condition in winConditionsObject) {
