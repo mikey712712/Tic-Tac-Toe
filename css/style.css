@@ -166,6 +166,10 @@ header.down img {
     background-color: #1db95458;
 }
 
+header img:hover {
+    background-color: #1db95458;
+}
+
 #reset {
     max-height: 85%;
     margin: 0;
