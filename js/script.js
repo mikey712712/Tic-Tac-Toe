@@ -180,18 +180,25 @@ const winScreen = (winner) => {
     winTextDiv.style.opacity = 1
 }
 
+// BOT DECISION MAKING FUNCTION
 const botCheckBoard = () => {
-    if (currentGridSize !== "Connect 4" && document.querySelector(`[data-square-num = "${(lineSize ** 2 + 1) / 2}"]`).innerHTML === "") {
+    // If the middle tile is empty in a 3x3 or 5x5 tic-tac-toe game, it will always take it on its first turn
+    if (currentGridSize !== "Connect 4" && currentGridSize !== "4 x 4" && document.querySelector(`[data-square-num = "${(lineSize ** 2 + 1) / 2}"]`).innerHTML === "") {
         document.querySelector(`[data-square-num = "${(lineSize ** 2 + 1) / 2}"]`).click()
         return
     }
+
+    // Creating an object of all relevant win conditions for the current game
     const winConditionsObject = gameData[currentGridSize].winConditions
     let choice = null
+
+    // Iterate over each win condition in the object
     for (let condition in winConditionsObject) {
         const requiredSlots = winConditionsObject[condition].length
         let circleCount = 0
         let crossCount = 0
 
+        // Iterate over each value of the current win condition, and count how many of those slots have circles or crosses
         for (let slot of winConditionsObject[condition]) {
             if (circleSlots.includes(String(slot))) {
                 circleCount++
@@ -199,47 +206,66 @@ const botCheckBoard = () => {
                 crossCount++
             }
         }
-        if (circleCount === requiredSlots - 1 && botMode && turn % 2 !== 0 && turn < lineSize ** 2) {
+
+        // If circle has all but one slot filled for the current win condition and the last needed slot is empty, click that slot and win
+        if (circleCount === requiredSlots - 1 && botMode && turn < lineSize ** 2) {
             for (let slot of winConditionsObject[condition]) {
                 const slotContent = document.querySelector(`[data-square-num = "${slot}"]`).innerHTML
-                let slotBelowContent = "no"
+
+                // slotBelowContent is used for making decisions in the connect 4 game, it has a default value that only gets overridden if there is a slot below
+                let slotBelowContent = "no-slot-below"
+
+                // Checking if there is a slot below by seeing if the current slot is above the bottom row
                 if (slot < lineSize ** 2 - lineSize) {
                     slotBelowContent = document.querySelector(`[data-square-num = "${slot + lineSize}"]`).innerHTML
                 }
+
+                // If the circleSlots array which stores circle's taken slots does not contain the current value of the iteration, that is the last value it needs to click
                 if (!circleSlots.includes(String(slot)) && (slotContent === "" || slotContent === circlePreview || slotContent === crossPreview)) {
-                    if (currentGridSize === "Connect 4" && (slotBelowContent !== "" || slotBelowContent === "no")) {
-                        console.log("bot too smart")
+                    // Connect 4 needs to slightly alter this logic by checking the slot under the one needed to win the game. If it's empty, the bot can't win so ignore this win condition.
+                    if (currentGridSize === "Connect 4" && (slotBelowContent !== "" || slotBelowContent === "no-slot-below")) {
                         document.querySelector(`[data-square-num = "${slot}"]`).click()
                         return
-                    } else if (currentGridSize !== "Connect 4") {
-                        console.log("bot too smart")
+                    }
+
+                    // If the game isnt connect 4, clicking the last slot needed which is empty will always win the game
+                    else if (currentGridSize !== "Connect 4") {
                         document.querySelector(`[data-square-num = "${slot}"]`).click()
                         return
                     }
                 }
             }
-        } else if (crossCount === requiredSlots - 1 && botMode && turn % 2 !== 0 && turn < lineSize ** 2) {
+        }
+
+        // If cross has all but one slot filled for the current win condition and the last needed slot is empty, click that slot and block the win
+        // This loop uses pretty much identical logic to the one above, except it stores the value of the slot where it can block until it has iterated over all the win conditions
+        // It has to do this in case it can win from a win condition later in the object
+        else if (crossCount === requiredSlots - 1 && botMode && turn < lineSize ** 2) {
             for (let slot of winConditionsObject[condition]) {
                 const slotContent = document.querySelector(`[data-square-num = "${slot}"]`).innerHTML
-                let slotBelowContent = "no"
+                let slotBelowContent = "no-slot-below"
                 if (slot < lineSize ** 2 - lineSize) {
                     slotBelowContent = document.querySelector(`[data-square-num = "${slot + lineSize}"]`).innerHTML
                 }
                 if (!crossSlots.includes(String(slot)) && (slotContent === "" || slotContent === circlePreview || slotContent === crossPreview)) {
-                    if (currentGridSize === "Connect 4" && (slotBelowContent !== "" || slotBelowContent === "no")) {
+                    // This line makes sure that the bot isn't trying to block when cross has an empty slot below it's winning slot
+                    if (currentGridSize === "Connect 4" && (slotBelowContent !== "" || slotBelowContent === "no-slot-below")) {
                         choice = document.querySelector(`[data-square-num = "${slot}"]`)
-                        console.log("BLOCKED LOL!")
                     } else if (currentGridSize !== "Connect 4") {
-                        console.log("BLOCKED LOL!")
                         choice = document.querySelector(`[data-square-num = "${slot}"]`)
                     }
                 }
             }
         }
     }
+
+    // If there is no way for the bot to win (and the function hasn't returned), it will block cross if there is an available block
     if (choice !== null) {
         choice.click()
-    } else {
+    }
+
+    // Otherwise if there is no way to win or to block, it will just pick a random slot
+    else {
         const slots = document.querySelectorAll(".game-slot")
         let availableSlots = []
         for (let slot of slots) {
@@ -333,20 +359,6 @@ const connect4Animation = (target) => {
         target.firstChild.classList.toggle("connect-4")
     }, 50)
 }
-
-// // BOT V1 LOGIC (WEAK AF)
-// const botChoice = () => {
-//     const slots = document.querySelectorAll(".game-slot")
-//     let availableSlots = []
-//     for (let slot of slots) {
-//         if (slot.innerHTML === "") {
-//             availableSlots.push(slot.dataset.squareNum)
-//         }
-//     }
-//     const botPick = availableSlots[Math.floor(Math.random() * availableSlots.length)]
-//     const botSlotChoice = document.querySelector(`[data-square-num = "${botPick}"]`)
-//     botSlotChoice.click()
-// }
 
 const ticTacToeAnimation = (target) => {
     target.firstChild.classList.toggle("tic-tac")
@@ -483,7 +495,6 @@ const unPreviewSymbolC4 = (event) => {
 
 const setLineSize = (value) => {
     currentGridSize = `${value.target.dataset.label}`
-    value.stopPropagation()
     if (window.matchMedia("(max-width: 640px)").matches) {
         outerContainer.style.width = gameData[currentGridSize].mobileContainerWidth
         outerContainer.style.height = gameData[currentGridSize].mobileContainerHeight
@@ -560,13 +571,17 @@ const showHead = () => {
         for (let selector of gridSizeSelectors) {
             selector.disabled = true
         }
-
+        botSwitch.disabled = true
         plug.style.transition = "0.5s"
         plug.classList.toggle("down")
         scoreDiv.classList.toggle("down")
         gridSizeDiv.classList.toggle("down")
         botSwitchDiv.classList.toggle("down")
-        setTimeout(() => header.classList.toggle("down"), 250)
+
+        setTimeout(() => {
+            header.classList.toggle("down")
+            botSwitchDiv.style.scale = "0"
+        }, 250)
     } else {
         for (let selector of gridSizeSelectors) {
             selector.disabled = false
@@ -574,8 +589,10 @@ const showHead = () => {
 
         header.classList.toggle("down")
         plug.style.transition = "2s"
+        botSwitchDiv.style.scale = "100%"
 
         setTimeout(() => {
+            botSwitch.disabled = false
             botSwitchDiv.classList.toggle("down")
             gridSizeDiv.classList.toggle("down")
             scoreDiv.classList.toggle("down")
