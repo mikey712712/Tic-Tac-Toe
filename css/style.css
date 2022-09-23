@@ -339,6 +339,20 @@ img.animation {
     filter: blur(2px);
 }
 
+img.animationC4 {
+    transition: 0.4s;
+    width: 100%;
+    height: 100%;
+}
+
+.blueteam {
+    filter: invert(51%) sepia(59%) saturate(535%) hue-rotate(89deg) brightness(98%) contrast(104%);
+}
+
+.redteam {
+    filter: invert(19%) sepia(97%) saturate(4175%) hue-rotate(347deg) brightness(105%) contrast(101%);
+}
+
 img.connect-4 {
     top: -50vh;
     opacity: 0;

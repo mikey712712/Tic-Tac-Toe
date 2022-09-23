@@ -138,6 +138,10 @@ restartButton.innerHTML = '<img id="reset" src="./images/reset.png">Restart'
 
 const cross = `<img id="cross" class="shape" src="./images/cross.png">`
 const circle = `<img id="circle" class="shape" src="./images/circle.png">`
+const c4Blue = `<img id="circle" class="shape blueteam" src="./images/circle.png">`
+const c4Red = `<img id="circle" class="shape redteam" src="./images/circle.png">`
+const c4BluePreview = `<img id="circle" class="preview blueteam" src="./images/circle.png">`
+const c4RedPreview = `<img id="circle" class="preview redteam" src="./images/circle.png">`
 const crossPreview = `<img src="./images/cross.png" class="preview">`
 const circlePreview = `<img src="./images/circle.png" class="preview">`
 const boogie = `<img id="kid-dancing" src="./images/boogie.gif">`
@@ -153,14 +157,22 @@ let crossPoints = 0
 let circlePoints = 0
 
 const winAnimation1 = (target) => {
-    target.classList.toggle("animation")
+    if (currentGridSize !== "Connect 4") {
+        target.classList.toggle("animation")
+    } else {
+        target.classList.toggle("animationC4")
+    }
 }
+
 const winAnimation2 = (target) => {
-    target.classList.toggle("animation")
+    if (currentGridSize !== "Connect 4") {
+        target.classList.toggle("animation")
+    } else {
+        target.classList.toggle("animationC4")
+    }
 }
 
 const blockScreen = () => {
-    console.log("h1")
     body.appendChild(blockScreenDiv)
 }
 
@@ -212,8 +224,9 @@ const botCheckBoard = () => {
         }
 
         // If circle has all but one slot filled for the current win condition and the last needed slot is empty, click that slot and win
-        if (circleCount === requiredSlots - 1 && botMode && turn < lineSize ** 2) {
+        if (circleCount === requiredSlots - 1) {
             for (let slot of winConditionsObject[condition]) {
+                // Store the content of the current slot being checked in a constant
                 const slotContent = document.querySelector(`[data-square-num = "${slot}"]`).innerHTML
 
                 // slotBelowContent is used for making decisions in the connect 4 game, it has a default value that only gets overridden if there is a slot below
@@ -225,7 +238,10 @@ const botCheckBoard = () => {
                 }
 
                 // If the circleSlots array which stores circle's taken slots does not contain the current value of the iteration, that is the last value it needs to click
-                if (!circleSlots.includes(String(slot)) && (slotContent === "" || slotContent === circlePreview || slotContent === crossPreview)) {
+                if (
+                    !circleSlots.includes(String(slot)) &&
+                    (slotContent === "" || slotContent === circlePreview || slotContent === crossPreview || slotContent === c4BluePreview || slotContent === c4RedPreview)
+                ) {
                     // Connect 4 needs to slightly alter this logic by checking the slot under the one needed to win the game. If it's empty, the bot can't win so ignore this win condition.
                     if (currentGridSize === "Connect 4" && (slotBelowContent !== "" || slotBelowContent === "no-slot-below")) {
                         document.querySelector(`[data-square-num = "${slot}"]`).click()
@@ -244,14 +260,17 @@ const botCheckBoard = () => {
         // If cross has all but one slot filled for the current win condition and the last needed slot is empty, click that slot and block the win
         // This loop uses pretty much identical logic to the one above, except it stores the value of the slot where it can block until it has iterated over all the win conditions
         // It has to do this in case it can win from a win condition later in the object
-        else if (crossCount === requiredSlots - 1 && botMode && turn < lineSize ** 2) {
+        else if (crossCount === requiredSlots - 1) {
             for (let slot of winConditionsObject[condition]) {
                 const slotContent = document.querySelector(`[data-square-num = "${slot}"]`).innerHTML
                 let slotBelowContent = "no-slot-below"
                 if (slot < lineSize ** 2 - lineSize) {
                     slotBelowContent = document.querySelector(`[data-square-num = "${slot + lineSize}"]`).innerHTML
                 }
-                if (!crossSlots.includes(String(slot)) && (slotContent === "" || slotContent === circlePreview || slotContent === crossPreview)) {
+                if (
+                    !crossSlots.includes(String(slot)) &&
+                    (slotContent === "" || slotContent === circlePreview || slotContent === crossPreview || slotContent === c4BluePreview || slotContent === c4RedPreview)
+                ) {
                     // This line makes sure that the bot isn't trying to block when cross has an empty slot below it's winning slot
                     if (currentGridSize === "Connect 4" && (slotBelowContent !== "" || slotBelowContent === "no-slot-below")) {
                         choice = document.querySelector(`[data-square-num = "${slot}"]`)
@@ -385,7 +404,7 @@ const insertSymbolConnect4 = (event) => {
     }
 
     const endOfLine = document.querySelector(`[data-square-num = "${currLine[4]}"]`)
-    if (endOfLine.innerHTML === "" || endOfLine.innerHTML === circlePreview || endOfLine.innerHTML === crossPreview) {
+    if (endOfLine.innerHTML === "" || endOfLine.innerHTML === c4BluePreview || endOfLine.innerHTML === c4RedPreview) {
         addShapeSlot = document.querySelector(`[data-square-num = "${currLine[4]}"]`)
     } else {
         for (let num of currLine) {
@@ -399,10 +418,10 @@ const insertSymbolConnect4 = (event) => {
     }
 
     if (turn % 2 === 0) {
-        addShapeSlot.innerHTML = cross
+        addShapeSlot.innerHTML = c4Blue
         crossSlots.push(addShapeSlot.dataset.squareNum)
     } else {
-        addShapeSlot.innerHTML = circle
+        addShapeSlot.innerHTML = c4Red
         circleSlots.push(addShapeSlot.dataset.squareNum)
     }
 
@@ -448,12 +467,12 @@ const previewSymbolC4 = (event) => {
     }
 
     const endOfLine = document.querySelector(`[data-square-num = "${currLine[4]}"]`)
-    if (endOfLine.innerHTML === "" || endOfLine.innerHTML === circlePreview || endOfLine.innerHTML === crossPreview) {
+    if (endOfLine.innerHTML === "" || endOfLine.innerHTML === c4BluePreview || endOfLine.innerHTML === c4RedPreview) {
         addShapeSlot = document.querySelector(`[data-square-num = "${currLine[4]}"]`)
     } else {
         for (let num of currLine) {
             const selectedSlot = document.querySelector(`[data-square-num = "${num}"]`)
-            if (selectedSlot.innerHTML === cross || selectedSlot.innerHTML === circle) {
+            if (selectedSlot.innerHTML === c4Blue || selectedSlot.innerHTML === c4Red) {
                 addShapeSlot = document.querySelector(`[data-square-num = "${num - 5}"]`)
                 break
             }
@@ -461,9 +480,9 @@ const previewSymbolC4 = (event) => {
     }
 
     if (turn % 2 === 0 && addShapeSlot.innerHTML === "") {
-        addShapeSlot.innerHTML = crossPreview
+        addShapeSlot.innerHTML = c4BluePreview
     } else if (addShapeSlot.innerHTML === "") {
-        addShapeSlot.innerHTML = circlePreview
+        addShapeSlot.innerHTML = c4RedPreview
     }
 }
 
@@ -481,18 +500,18 @@ const unPreviewSymbolC4 = (event) => {
     }
 
     const endOfLine = document.querySelector(`[data-square-num = "${currLine[4]}"]`)
-    if (endOfLine.innerHTML === "" || endOfLine.innerHTML === circlePreview || endOfLine.innerHTML === crossPreview) {
+    if (endOfLine.innerHTML === "" || endOfLine.innerHTML === c4BluePreview || endOfLine.innerHTML === c4RedPreview) {
         addShapeSlot = document.querySelector(`[data-square-num = "${currLine[4]}"]`)
     } else {
         for (let num of currLine) {
             const selectedSlot = document.querySelector(`[data-square-num = "${num}"]`)
-            if (selectedSlot.innerHTML === cross || selectedSlot.innerHTML === circle) {
+            if (selectedSlot.innerHTML === c4Blue || selectedSlot.innerHTML === c4Red) {
                 addShapeSlot = document.querySelector(`[data-square-num = "${num - 5}"]`)
                 break
             }
         }
     }
-    if (addShapeSlot.innerHTML === crossPreview || addShapeSlot.innerHTML === circlePreview) {
+    if (addShapeSlot.innerHTML === c4BluePreview || addShapeSlot.innerHTML === c4RedPreview) {
         addShapeSlot.innerHTML = ""
     }
 }
@@ -612,8 +631,10 @@ const restartGame = () => {
         slot.style.opacity = 0
     }
     winTextDiv.style.opacity = 0
+    blockScreen()
     setTimeout(() => initBoard(), 400)
     setTimeout(() => whitenSquares(), 800)
+    setTimeout(() => unBlockScreen(), 900)
 }
 
 const toggleBotMode = () => {
