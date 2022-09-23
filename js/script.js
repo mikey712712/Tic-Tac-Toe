@@ -126,6 +126,8 @@ const scoreDiv = document.querySelector(".win-container")
 const xScore = document.querySelector("#p1score")
 const oScore = document.querySelector("#p2score")
 const blockScreenDiv = document.createElement("div")
+const boogieButton = document.querySelector("#dance")
+const boogieDiv = document.querySelector("#boogie-gif")
 blockScreenDiv.setAttribute("id", "blocker")
 
 const restartButton = document.createElement("button")
@@ -138,9 +140,11 @@ const cross = `<img id="cross" class="shape" src="./images/cross.png">`
 const circle = `<img id="circle" class="shape" src="./images/circle.png">`
 const crossPreview = `<img src="./images/cross.png" class="preview">`
 const circlePreview = `<img src="./images/circle.png" class="preview">`
+const boogie = `<img id="kid-dancing" src="./images/boogie.gif">`
 let crossSlots = []
 let circleSlots = []
 let botMode = false
+let dancing = false
 
 let currentGridSize = "3 x 3"
 let lineSize = 3
@@ -621,6 +625,17 @@ const toggleBotMode = () => {
     restartGame()
 }
 
+const dance = () => {
+    if (dancing) {
+        document.querySelector("#kid-dancing").remove()
+        dancing = false
+    } else {
+        boogieDiv.innerHTML = boogie
+        dancing = true
+    }
+}
+
 dropDown.addEventListener("click", showHead)
 restartButton.addEventListener("click", restartGame)
 botSwitch.addEventListener("click", toggleBotMode)
+boogieButton.addEventListener("click", dance)

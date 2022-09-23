@@ -216,6 +216,24 @@ button.win {
     opacity: 1;
 }
 
+#boogie-gif {
+    position: absolute;
+    height: 40vh;
+    top: 17%;
+    left: 10%;
+}
+
+#boogie-gif img {
+    height: 100%;
+}
+
+#boogie-button {
+    opacity: 0.03;
+    position: absolute;
+    bottom: 25px;
+    left: 25px;
+}
+
 .outer-container {
     border-radius: 1.5vh;
     display: flex;
@@ -347,6 +365,10 @@ img.tic-tac {
     label#bot {
         padding-left: 1vw;
         padding-top: 0.3vh;
+    }
+
+    #boogie-button {
+        opacity: 0;
     }
 }
 
