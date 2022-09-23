@@ -349,7 +349,12 @@ const checkForWin = () => {
                     setTimeout(() => winAnimation1(currSlot), 400)
                     setTimeout(() => winAnimation2(currSlot), 800)
                 }
-                setTimeout(() => winScreen("Cross"), 1400)
+                if (currentGridSize !== "Connect 4") {
+                    setTimeout(() => winScreen("Cross"), 1400)
+                } else {
+                    setTimeout(() => winScreen("Green"), 1400)
+                }
+
                 return
             } else if (circleCount === requiredSlots) {
                 circlePoints += 1
@@ -358,7 +363,11 @@ const checkForWin = () => {
                     setTimeout(() => winAnimation1(currSlot), 400)
                     setTimeout(() => winAnimation2(currSlot), 800)
                 }
-                setTimeout(() => winScreen("Circle"), 1400)
+                if (currentGridSize !== "Connect 4") {
+                    setTimeout(() => winScreen("Circle"), 1400)
+                } else {
+                    setTimeout(() => winScreen("Red"), 1400)
+                }
                 return
             }
         }
