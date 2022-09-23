@@ -627,6 +627,9 @@ const showHead = () => {
 const restartGame = () => {
     const slots = document.querySelectorAll(".game-slot")
     for (let slot of slots) {
+        if (slot.firstChild !== null) {
+            slot.firstChild.style.filter = "unset"
+        }
         slot.style.backgroundColor = "black"
         slot.style.opacity = 0
     }
