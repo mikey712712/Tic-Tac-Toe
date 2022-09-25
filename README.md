@@ -18,15 +18,17 @@ Play Tic-Tac-Toe on a 4x4 or 5x5 grid to make things more interesting.
 
 The app also features Connect 4, the goal of this game is to complete any line of 4 by dropping your shape into the 5 x 5 grid.
 
-<figure align="center"><img 
+<br><p align="center"><img 
     src="./images/readmesnip.png" 
     style= "width: 70%"
     title="dropdown bar">
-    <figcaption
+<p align="center"
     style="font-size: 0.95em; font-weight: 600">
-    Use the dropdown bar to access all features
-    </figcaption>
-</figure>
+Use the dropdown bar to access all features
+</p>
+
+</p>
+<br>
 
 ## **Technologies Used**
 
