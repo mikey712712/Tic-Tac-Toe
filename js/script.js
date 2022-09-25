@@ -220,7 +220,10 @@ const botCheckBoard = () => {
 	) {
 		document.querySelector(`[data-square-num = "${(lineSize ** 2 + 1) / 2}"]`).click()
 		return
-	} else if (currentGridSize !== "Connect 4" && document.querySelector(`[data-square-num = "1"]`).innerHTML === "") {
+	}
+
+	// Otherwise if the player takes the middle tile on turn 1, take the top left corner
+	else if (turn === 1 && currentGridSize !== "Connect 4" && document.querySelector(`[data-square-num = "1"]`).innerHTML === "") {
 		document.querySelector(`[data-square-num = "1"]`).click()
 		return
 	}
@@ -332,6 +335,10 @@ const botCheckBoard = () => {
 	// If there is no way for the bot to win, it will block cross if there is an available block
 	if (choice !== null) {
 		choice.click()
+	}
+	// If the player is trying to set up a double corner win, this blocks it
+	else if (turn === 3 && currentGridSize !== "Connect 4") {
+		document.querySelector(`[data-square-num = "2"]`).click()
 	}
 
 	// Otherwise if there is no way to win or to block it will just pick a random slot out of the remaining empty slots,
