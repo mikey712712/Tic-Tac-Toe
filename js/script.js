@@ -220,6 +220,9 @@ const botCheckBoard = () => {
 	) {
 		document.querySelector(`[data-square-num = "${(lineSize ** 2 + 1) / 2}"]`).click()
 		return
+	} else if (currentGridSize !== "Connect 4" && document.querySelector(`[data-square-num = "1"]`).innerHTML === "") {
+		document.querySelector(`[data-square-num = "1"]`).click()
+		return
 	}
 
 	// Creating an object of all relevant win conditions for the current game
@@ -303,8 +306,22 @@ const botCheckBoard = () => {
 				) {
 					// This line makes sure that the bot isn't trying to block when cross has an empty slot below it's winning slot
 					if (currentGridSize === "Connect 4" && (slotBelowContent !== "" || slotBelowContent === "no-slot-below")) {
+						// If the slot below isn't empty and cross can win, block that win
 						choice = document.querySelector(`[data-square-num = "${slot}"]`)
-					} else if (currentGridSize !== "Connect 4") {
+					}
+
+					// If the slot below is empty and cross needs it filled to win, exclude the line the slot belongs to from the possible random choices
+					else if (currentGridSize === "Connect 4") {
+						for (let line in gameData[currentGridSize].insertLines)
+							if (gameData[currentGridSize].insertLines[line].includes(slot)) {
+								for (let number of gameData[currentGridSize].insertLines[line]) {
+									console.log(number)
+									document.querySelector(`[data-square-num = "${number}"]`).hidden = true
+								}
+							}
+					}
+					// Otherwise if the game is Tic-Tac-Toe, it should always block cross' last needed slot (if the bot can't win)
+					else if (currentGridSize !== "Connect 4") {
 						choice = document.querySelector(`[data-square-num = "${slot}"]`)
 					}
 				}
@@ -312,20 +329,34 @@ const botCheckBoard = () => {
 		}
 	}
 
-	// If there is no way for the bot to win (and the function hasn't returned), it will block cross if there is an available block
+	// If there is no way for the bot to win, it will block cross if there is an available block
 	if (choice !== null) {
 		choice.click()
 	}
 
-	// Otherwise if there is no way to win or to block, it will just pick a random slot
+	// Otherwise if there is no way to win or to block it will just pick a random slot out of the remaining empty slots,
+	// excluding slots that will benefit the player in Connect 4
 	else {
 		const slots = document.querySelectorAll(".game-slot")
 		let availableSlots = []
 		for (let slot of slots) {
-			if (slot.innerHTML === "") {
+			if (slot.innerHTML === "" && slot.hidden === false) {
 				availableSlots.push(slot.dataset.squareNum)
+			} else if (slot.hidden === true) {
+				slot.hidden = false
 			}
 		}
+
+		// If all of the allowed slots are full, pick randomly out of all empty slots
+		if (availableSlots.length === 0) {
+			for (let slot of slots) {
+				if (slot.innerHTML === "") {
+					availableSlots.push(slot.dataset.squareNum)
+				}
+			}
+		}
+		console.log(availableSlots)
+
 		const botPick = availableSlots[Math.floor(Math.random() * availableSlots.length)]
 		const botSlotChoice = document.querySelector(`[data-square-num = "${botPick}"]`)
 		botSlotChoice.click()
