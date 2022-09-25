@@ -264,14 +264,7 @@ const botCheckBoard = () => {
 
 				// If the circleSlots array which stores circle's taken slots does not contain the current value of the iteration, that
 				// is the last value it needs to click
-				if (
-					!circleSlots.includes(String(slot)) &&
-					(slotContent === "" ||
-						slotContent === circlePreview ||
-						slotContent === crossPreview ||
-						slotContent === c4BluePreview ||
-						slotContent === c4RedPreview)
-				) {
+				if (!circleSlots.includes(String(slot)) && slotContent === "") {
 					// Connect 4 needs to slightly alter this logic by checking the slot under the one needed to win the game.
 					// If it's empty, the bot can't win so ignore this win condition.
 					if (currentGridSize === "Connect 4" && (slotBelowContent !== "" || slotBelowContent === "no-slot-below")) {
@@ -299,14 +292,8 @@ const botCheckBoard = () => {
 				if (slot < lineSize ** 2 - lineSize) {
 					slotBelowContent = document.querySelector(`[data-square-num = "${slot + lineSize}"]`).innerHTML
 				}
-				if (
-					!crossSlots.includes(String(slot)) &&
-					(slotContent === "" ||
-						slotContent === circlePreview ||
-						slotContent === crossPreview ||
-						slotContent === c4BluePreview ||
-						slotContent === c4RedPreview)
-				) {
+				// Find which slot is missing to complete the winning condition
+				if (!crossSlots.includes(String(slot)) && slotContent === "") {
 					// This line makes sure that the bot isn't trying to block when cross has an empty slot below it's winning slot
 					if (currentGridSize === "Connect 4" && (slotBelowContent !== "" || slotBelowContent === "no-slot-below")) {
 						// If the slot below isn't empty and cross can win, block that win
@@ -337,7 +324,7 @@ const botCheckBoard = () => {
 		choice.click()
 	}
 	// If the player is trying to set up a double corner win, this blocks it
-	else if (turn === 3 && currentGridSize !== "Connect 4") {
+	else if (turn === 3 && currentGridSize !== "Connect 4" && document.querySelector(`[data-square-num = "2"]`).innerHTML === "") {
 		document.querySelector(`[data-square-num = "2"]`).click()
 	}
 
