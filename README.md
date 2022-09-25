@@ -41,4 +41,5 @@ The app is entirely built using front-end web development languages, specificall
     <li>HTML5</li>
     <li>CSS3</li>
 </ul>
+<br>
 The app is deployed through Github pages.
