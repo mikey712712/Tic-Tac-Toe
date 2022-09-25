@@ -36,9 +36,9 @@ Use the dropdown bar to access all features
 
 The app is entirely built using front-end web development languages, specifically:
 
-<ol>
+<ul>
     <li>Javascript</li>
     <li>HTML5</li>
     <li>CSS3</li>
-</ol>
+</ul>
 The app is deployed through Github pages.
