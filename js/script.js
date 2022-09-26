@@ -170,15 +170,7 @@ let turn = 0
 let crossPoints = 0
 let circlePoints = 0
 
-const winAnimation1 = (target) => {
-	if (currentGridSize !== "Connect 4") {
-		target.classList.toggle("animation")
-	} else {
-		target.classList.toggle("animationC4")
-	}
-}
-
-const winAnimation2 = (target) => {
+const winAnimation = (target) => {
 	if (currentGridSize !== "Connect 4") {
 		target.classList.toggle("animation")
 	} else {
@@ -387,8 +379,8 @@ const checkForWin = () => {
 				crossPoints += 1
 				for (let slot of winConditionsObject[condition]) {
 					const currSlot = document.querySelector(`[data-square-num = "${slot}"]`).firstChild
-					setTimeout(() => winAnimation1(currSlot), 400)
-					setTimeout(() => winAnimation2(currSlot), 800)
+					setTimeout(() => winAnimation(currSlot), 400)
+					setTimeout(() => winAnimation(currSlot), 800)
 				}
 				if (currentGridSize !== "Connect 4") {
 					setTimeout(() => winScreen("Cross"), 1400)
@@ -401,8 +393,8 @@ const checkForWin = () => {
 				circlePoints += 1
 				for (let slot of winConditionsObject[condition]) {
 					const currSlot = document.querySelector(`[data-square-num = "${slot}"]`).firstChild
-					setTimeout(() => winAnimation1(currSlot), 400)
-					setTimeout(() => winAnimation2(currSlot), 800)
+					setTimeout(() => winAnimation(currSlot), 400)
+					setTimeout(() => winAnimation(currSlot), 800)
 				}
 				if (currentGridSize !== "Connect 4") {
 					setTimeout(() => winScreen("Circle"), 1400)
